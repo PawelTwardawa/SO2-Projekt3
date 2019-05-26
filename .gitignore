@@ -1,0 +1,5 @@
+#to co my tam musimy ignorować?
+/CMakeFiles
+*.txt
+*.cmake
+Makefile
