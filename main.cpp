@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+    srand(time(NULL));
     printf("Wypłyńmy na głębię i popłyńmy z nurtem rzeki!\n");
     return 0;
 }
