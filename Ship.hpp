@@ -2,6 +2,7 @@
 
 class Ship
 {
+public:
     int nr;
     int capacity;
     int x;
@@ -9,5 +10,4 @@ class Ship
     float speed;
 
     Ship(int N, int C, int X, int Y, float S);
-    
-}
+};

@@ -7,16 +7,16 @@ Ocean::Ocean()
     switch (r)
     {
     case 1:
-        windDirection = "S";
+        windDirection = 'S';
         break;
     case 2:
-        windDirection = "N";
+        windDirection = 'N';
         break;
     case 3:
-        windDirection = "E";
+        windDirection = 'E';
         break;
     default:
-        windDirection = "W";
+        windDirection = 'W';
         break;
     }   
     

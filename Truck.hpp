@@ -1,4 +1,3 @@
-
 //Ciężarówka jest także blokowana przez statek.
 //Może jakiś magazyn też ją będzie blokować, żeby ją rozładowywał?
 //Może być zablokowana przez statek tylko jeśli jest pusta, może być rozładowana przez magazyn jeśli jest załadowana
@@ -11,4 +10,4 @@ public:
     bool isFull;
 
     Truck(int N, int C);
-}
+};

@@ -1,5 +1,3 @@
-
-
 //Jest blokowana przez przepływający statek
 //Mówi przez jaki czas przepływa przez nią statek 
 
@@ -9,4 +7,4 @@ public:
     int sailTime;
     
     WaterGate(int sT);
-}
+};

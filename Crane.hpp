@@ -1,5 +1,3 @@
-
-
 //Klasa żuraw będzie zasobem, będzie blokowana.
 //Posiada nr.
 
@@ -9,4 +7,4 @@ public:
     int nr;
 
     Crane(int N);
-}
+};

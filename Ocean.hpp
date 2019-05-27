@@ -1,4 +1,3 @@
-
 //Klasa Ocean będzie odpowiadać za przechowywanie wartości na temat kierunku wiatru, wysokości fal i sztormu.
 //Współczynnik poruszania będzie wyliczany na podstawie 3+/-(kierunek wiatru) / (wysokość fal + współczynnik sztormu)
 //Kierunek wiatru daje +2(ten sam kierunek), -2(przeciwny kierunek), 0(prostopadły).
@@ -15,4 +14,4 @@ public:
 
     Ocean();
     Ocean(char wD, short wH, short sV);
-}
+};
