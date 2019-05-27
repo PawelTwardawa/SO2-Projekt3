@@ -1,4 +1,4 @@
-#include "Crane.cpp"
+
 
 //Klasa żuraw będzie zasobem, będzie blokowana.
 //Posiada nr.
