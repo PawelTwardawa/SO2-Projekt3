@@ -2,5 +2,6 @@
 /CMakeFiles
 *.txt
 *.cmake
+.vscode/
 Makefile
 program
