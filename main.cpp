@@ -4,6 +4,10 @@
 #include <mutex>
 #include <ncurses.h>
 
+#include "Ocean.hpp"
+#include "Ship.hpp"
+
+
 //Program dostaje ilość statków, ilość żurawi i ilość ciężarówek
 
 int main(int argc, char* argv[])
@@ -31,7 +35,10 @@ int main(int argc, char* argv[])
     {
         std::cout << "Podałeś złą liczbę dnaych. Wprowadź: ilość statków, ilość żurawi i ilość ciężarówek.\n";
     }
-    
+
+    Ocean *ocean = new Ocean('W', 1, 1);
+
+    Ship *s = new Ship(2,2,2,2,2, ocean);    
 
     return 0;
 }

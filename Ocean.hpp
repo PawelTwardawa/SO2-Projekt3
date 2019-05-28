@@ -4,6 +4,14 @@
 //Wartości wiatru: N, W, S, E
 //Wysokość fal: 1-7
 //Współczynnik sztormu: 0(brak sztormu), 1(słaby sztorm), 2(sztorm), 3(silny sztorm)
+#pragma once
+
+#include <mutex>
+#include <atomic>
+#include <vector>
+//#include "Ship.hpp"
+
+class Ship;
 
 class Ocean
 {
@@ -11,6 +19,8 @@ public:
     char windDirection;
     short waveHight;
     short stormValue;
+
+    std::atomic<std::array<std::array<Ship, 10>, 10>> **ships_arr;
 
     Ocean();
     Ocean(char wD, short wH, short sV);
