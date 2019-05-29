@@ -25,7 +25,7 @@ void Ui::Update()
             {
                 if(ocean->arr_ships[i][j] != 0)
                 {
-                    mvprintw(j, i, "+"); //"%d", ocean->arr_ships[i][j]);
+                    mvprintw(j, i, "#"); //"%d", ocean->arr_ships[i][j]);
                 }
                 else
                 {
