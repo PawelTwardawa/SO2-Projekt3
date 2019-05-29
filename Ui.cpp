@@ -29,16 +29,13 @@ void Ui::Update()
                 }
                 else
                 {
-                    if((i < ocean->sluiveO->x || i > ocean->sluiveO->x+ocean->sluiveO->len))
+                    if((i < ocean->sluiveO->x || i > ocean->sluiveO->x+ocean->sluiveO->len))// || j == ocean->sluiveO->y)
                         mvprintw(j, i, ".");
                     else
                     {
                         mvprintw(j, i, " ");
                     }
-                    
                 }
-                
-                
             }
         refresh();
 

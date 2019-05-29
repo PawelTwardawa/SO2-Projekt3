@@ -30,6 +30,7 @@ public:
     short stormValue;
     std::mutex m;
     Sluice *sluiveO;
+    int length;
 
     std::array<int, 10> *arr;
     //std::array<std::array<std::atomic<int>, 50>, 50> arr_ships;
