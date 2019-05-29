@@ -33,12 +33,12 @@ int main(int argc, char* argv[])
         if(numberShips <= 0 || numberCranes <= 0 || numberTrucks <= 0)
         {
             std::cout << "Wprowadzane liczby muszą być większe od zera!\n";
-            return 0;
+            return -1;
         }
         if(5 > numberShips || numberShips > 10 || 5 > numberCranes || numberCranes > 10 || 5 > numberTrucks || numberTrucks > 10)
         {
             std::cout << "Wprowadzane liczby muszą być większe niż 5 i nie większe niż 10.\n";
-            return 0;
+            return -2;
         }
 
         
