@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 
     for(int i = 0; i < numberShips; i++)
     {
-        Ship *s = new Ship(i +1, 2,1, i+1, 1, ocean);
+        Ship *s = new Ship(i +1, 2,1, i+6, 1, ocean);
         ships.push_back(s);
     }
 

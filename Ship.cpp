@@ -26,12 +26,12 @@ void Ship::Move()
         double dx = x + speed - (wind + wave + storm)/10;
         bool moved = false;
 
-        double dy = rand() % 3 - 1; //tu sie zmieni zaleznie od prametrow morza
+        double dy = y +  rand() % 3 - 1; //tu sie zmieni zaleznie od prametrow morza
 
         
         while(!moved)
         {
-            //ocean->m.lock();
+            ocean->m.lock();
             if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
             {
                 moved = true;
@@ -44,10 +44,10 @@ void Ship::Move()
             }
             else
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                //std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
 
-            //ocean->m.unlock();
+            ocean->m.unlock();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
