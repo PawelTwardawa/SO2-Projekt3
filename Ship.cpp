@@ -18,7 +18,7 @@ Ship::Ship(int N, int C, int X, int Y, float S, Ocean * o)
     wave =1;
     t = std::thread(&Ship::Move, this);
     isSailInSluice = false;
-    track = x;
+    track = Y;
     dirC = 'E';
 }
 
@@ -39,53 +39,46 @@ void Ship::Move()
             else
                 dirC = 'E';
         }
+
+        if(!isSailInSluice)
+        {
+            if((x == ocean->sluiveO->x-3 && dirC == 'E') || (x == ocean->sluiveO->x + ocean->sluiveO->len + 3 && dirC == 'W'))
+            {
+                isSailInSluice = true;
+                ocean->sluiveO->mSluice.lock();
+                //wyrównanie do poziomu śluzy 
+                MoveToSluice();
+            }
+        }
+        else
+        {
+            //sprawdzamy czy statek nie jest poza śluzą, żeby ją odblokować
+            if((x == ocean->sluiveO->x + ocean->sluiveO->len+1 && dirC == 'E') || (x == ocean->sluiveO->x-1 && dirC == 'W')) 
+            {
+                isSailInSluice = false;
+                ocean->sluiveO->mSluice.unlock();
+                //tutaj uruchamiam metodę powrotu do swojego toru
+                MoveFromSluice();
+            }
+        }
+
         dx = x + (speed - (wind + wave + storm)/10) * direction;
         moved = false;
         dy = y;//+  rand() % 3 - 1; //tu sie zmieni zaleznie od prametrow morza
 
+
         while(!moved)
         {
-            if(!isSailInSluice)
-            {
-                if((x == ocean->sluiveO->x-2 && dirC == 'E') || (x == ocean->sluiveO->x + ocean->sluiveO->len + 2 && dirC == 'W'))
-                {
-                    isSailInSluice = true;
-                    ocean->sluiveO->mSluice.lock();
-                    //dy = ocean->sluiveO->y;
-                    //x++;                                    //statek wpływa do śluzy
-                    //MoveToSluice();                         //tutaj uruchamiam metodę zjeścia do śluzy
-                }
-            }
-            else
-            {
-                //sprawdzamy czy statek nie jest poza śluzą, żeby ją odblokować
-                if((x == ocean->sluiveO->x + ocean->sluiveO->len && dirC == 'E') || (x == ocean->sluiveO->x-1 && dirC == 'W')) 
-                {
-                    isSailInSluice = false;
-                    ocean->sluiveO->mSluice.unlock();
-                    //dy = track;
-                    //tutaj uruchamiam metodę powrotu do swojego toru
-                }
-            }
-            
             ocean->m.lock();
+
             if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
             {
                 moved = true;
 
-                
                 ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
                 ocean->arr_ships[x][y] = 0;
                 
-                //if(!isSailInSluice)
-                {
-                    y = ceil(dy);
-                }
-                //else
-                {
-                    //y = ocean->sluiveO->y;
-                }
-                
+                y = ceil(dy);
                 x = ceil(dx);
             }
             else
@@ -95,7 +88,7 @@ void Ship::Move()
 
             ocean->m.unlock();
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
     
 }
@@ -103,30 +96,83 @@ void Ship::Move()
 void Ship::MoveToSluice()
 {
     double dy;
-    short direction = 1;
+    double dx;
+    int dir = 1;
+    bool moved;
 
     if(y > ocean->sluiveO->y)
-        direction = -1;
+        dir = -1;
+    if(dirC == 'E')
+        dx = x + 1;
+    else 
+        dx = x - 1;
 
-    do
+    while (y - ocean->sluiveO->y != 0)
     {
-        ocean->m.lock();
-        dy = y + 1 * direction; //tu sie zmieni zaleznie od prametrow morza
-        //jeśli jest niżej niż śluza
+        moved = false;
+        dy = y+(1*dir); 
         
-        if(ocean->arr_ships[x][ceil(dy)] == 0)
-        {    
-            ocean->arr_ships[x][ceil(dy)] = nr;
-            ocean->arr_ships[x][y] = 0;
-            y = ceil(dy);
-        }
-        else
+        while(!moved)
         {
-            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            ocean->m.lock();
+
+            if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
+            {
+                moved = true;
+
+                ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
+                ocean->arr_ships[x][y] = 0;
+                
+                y = ceil(dy);
+                x = ceil(dx);
+            }
+            else
+            {
+                //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
+            ocean->m.unlock();
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        ocean->m.unlock();
-    }while (y != ocean->sluiveO->y);
-    
-    
+        std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
+    }
+}
+
+void Ship::MoveFromSluice()
+{
+    double dy;
+    double dx;
+    int dir = 1;
+    bool moved;
+
+    if(y > track)
+        dir = -1;
+    dx = x;
+    while (y - track != 0)
+    {
+        moved = false;
+        dy = y+(1*dir); 
+        
+        while(!moved)
+        {
+            ocean->m.lock();
+
+            if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
+            {
+                moved = true;
+
+                ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
+                ocean->arr_ships[x][y] = 0;
+                
+                y = ceil(dy);
+                x = ceil(dx);
+            }
+            else
+            {
+                //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+
+            ocean->m.unlock();
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
+    }
 }

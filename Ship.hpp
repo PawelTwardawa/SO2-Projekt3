@@ -24,4 +24,5 @@ class Ship
         Ship(int N, int C, int X, int Y, float S, Ocean * o);// : t(&Ship::Move, this){};
         void Move();
         void MoveToSluice();
+        void MoveFromSluice();
 };
