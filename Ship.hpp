@@ -17,6 +17,7 @@ class Ship
         int storm;
         float speed;
         Ocean * ocean;
+        bool isSailInSluice;
 
         Ship(int N, int C, int X, int Y, float S, Ocean * o);// : t(&Ship::Move, this){};
         void Move();

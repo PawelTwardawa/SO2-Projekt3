@@ -7,6 +7,7 @@
 #include "Ocean.hpp"
 #include "Ship.hpp"
 #include "Ui.hpp"
+#include "Sluice.hpp"
 
 
 //Program dostaje ilość statków, ilość żurawi i ilość ciężarówek

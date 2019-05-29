@@ -31,4 +31,6 @@ Ocean::Ocean(char wD, short wH, short sV)
     windDirection = wD;
     waveHight = wH;
     stormValue = sV;
+
+    sluiveO = new Sluice(10, 5);                    //śluze przyjmujemy w x=10, y=5
 }

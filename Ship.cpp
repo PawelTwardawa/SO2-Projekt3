@@ -17,6 +17,7 @@ Ship::Ship(int N, int C, int X, int Y, float S, Ocean * o)
     storm =1;
     wave =1;
     t = std::thread(&Ship::Move, this);
+    isSailInSluice = false;
 }
 
 void Ship::Move()
@@ -31,6 +32,24 @@ void Ship::Move()
         
         while(!moved)
         {
+            if(isSailInSluice)
+            {
+                //sprawdzamy czy statek nie jest poza śluzą, żeby ją odblokować
+                if(x > ocean->sluiveO->x + ocean->sluiveO->len)
+                {
+                    isSailInSluice = false;
+                    ocean->sluiveO->mSluice.unlock();
+                }
+            }
+            else
+            {
+                if(x == ocean->sluiveO->x)
+                {
+                    isSailInSluice = true;
+                    ocean->sluiveO->mSluice.lock();
+                }
+            }
+            
             ocean->m.lock();
             if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
             {
