@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Ocean.hpp"
 #include <stdlib.h>
 
