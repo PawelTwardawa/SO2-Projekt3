@@ -25,14 +25,17 @@ void Ui::Update()
             {
                 if(ocean->arr_ships[i][j] != 0)
                 {
-                    mvprintw(j, i, "+"); //"%d", ocean->arr_ships[i][j]);
+                    mvprintw(j, i, "#"); //"%d", ocean->arr_ships[i][j]);
                 }
                 else
                 {
-                    mvprintw(j, i, ".");
+                    if((i < ocean->sluiveO->x || i > ocean->sluiveO->x+ocean->sluiveO->len) || j == ocean->sluiveO->y)
+                        mvprintw(j, i, ".");
+                    else
+                    {
+                        mvprintw(j, i, " ");
+                    }
                 }
-                
-                
             }
         refresh();
 
