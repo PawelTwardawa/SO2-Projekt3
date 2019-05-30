@@ -1,8 +1,9 @@
 //Ciężarówka jest także blokowana przez statek.
 //Może jakiś magazyn też ją będzie blokować, żeby ją rozładowywał?
 //Może być zablokowana przez statek tylko jeśli jest pusta, może być rozładowana przez magazyn jeśli jest załadowana
-
+//Ciężarówki mają ograniczenie prędkości i nie mogą się ścigać
 #include "Warehouse.hpp"
+#include <thread>
 
 class Truck 
 {
@@ -20,8 +21,10 @@ public:
     int timeOperation;                          //czas operacji rozładunku/załadunku
 
 
-    Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC), int tO;
+    Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO);
     void Load();
     void Unload();
     void Move();
+    void EntryWarehouse();
+    void EntryHarbor();
 };

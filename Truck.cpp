@@ -1,4 +1,6 @@
 #include "Truck.hpp"
+#include <cmath>
+#include <stdlib.h>
 
 Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO)
 {
@@ -12,7 +14,7 @@ Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC,
     warH = w;
     dirC = dC; 
     timeOperation = tO;
-    threadT = std::thread(&Warehouse::Move, this);
+    threadT = std::thread(&Truck::Move, this);
 }
 
 void Truck::Load()
@@ -50,9 +52,15 @@ void Truck::Move()
         {
             direction *= -1;
             if(dirC == 'E')
+            {
                 dirC = 'W';
+                EntryWarehouse();
+            }
             else
+            {
                 dirC = 'E';
+                EntryHarbor();
+            }
         }
 
         dx = x + 1 * direction;
@@ -83,4 +91,16 @@ void Truck::Move()
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
+}
+
+void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarówka jest pas wyżej
+{
+    Load();
+    y = y + 1;
+}
+
+void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka jest pas niżej
+{
+    Unload();
+    y = y - 1;
 }
