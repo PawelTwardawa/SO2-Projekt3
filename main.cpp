@@ -53,7 +53,8 @@ int main(int argc, char* argv[])
     }
 
     Ocean *ocean = new Ocean('W', 1, 1);
-    Warehouse *warehouse = new Warehouse('W', 2, 10, 10, 1);
+    Warehouse *warehouse = new Warehouse('W', 10, 10, 30, 1); //magazyn 50x50, droga zaczyna się w x=10, kończy w x=10+30, na y=10, ilość pasów = 1
+
 
 
     for(int i = 0; i < numberShips; i++)
@@ -67,7 +68,7 @@ int main(int argc, char* argv[])
         trucks.push_back(t);
     }
 
-    std::thread tu(&Ui::Update, new Ui(ocean));
+    std::thread tu(&Ui::Update, new Ui(ocean, warehouse));
 
     tu.join();
 

@@ -21,7 +21,7 @@ Warehouse::Warehouse()
         windDirection = 'W';
         break;
     }   
-    sizeX = 15;
+    sizeX = 50;
     sizeY = 50;
 
     roadX = 5;
@@ -34,7 +34,7 @@ Warehouse::Warehouse()
 Warehouse::Warehouse(char wD, int X, int Y, int rL, int nR)
 {
     windDirection = wD;
-    sizeX = 15;
+    sizeX = 50;
     sizeY = 50;
 
     roadX = X;

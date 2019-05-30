@@ -22,7 +22,7 @@ void Truck::Load()
     int div = 10;
     for(int i; i<div; i++)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
         status += 100/div;
     }
     status = 0;
@@ -33,7 +33,7 @@ void Truck::Unload()
     int div = 10;
     for(int i; i<div; i++)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
         status += 100/div;
     }
     status = 0;
@@ -96,11 +96,19 @@ void Truck::Move()
 void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarówka jest pas wyżej
 {
     Load();
+    warH->mutexWarh.lock();
+    warH->arr_trucks[x][y] = 0;
     y = y + 1;
+    warH->arr_trucks[x][y] = nr;
+    warH->mutexWarh.unlock();
 }
 
 void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka jest pas niżej
 {
     Unload();
+    warH->mutexWarh.lock();
+    warH->arr_trucks[x][y] = 0;
     y = y - 1;
+    warH->arr_trucks[x][y] = nr;
+    warH->mutexWarh.unlock();
 }

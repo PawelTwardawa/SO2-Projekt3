@@ -1,9 +1,10 @@
 #include "Ui.hpp"
 
 
-Ui::Ui(Ocean * o)
+Ui::Ui(Ocean * o, Warehouse *w)
 {
     ocean = o;
+    warehouse = w;
 
     initscr();
     noecho();
@@ -21,6 +22,7 @@ void Ui::Update()
     {
         clrtoeol();
         for(int i = 0; i < ocean->arr_ships.size(); i++)
+        {
             for(int j = 0; j < ocean->arr_ships[i].size(); j++)
             {
                 if(ocean->arr_ships[i][j] != 0)
@@ -37,11 +39,30 @@ void Ui::Update()
                     }
                 }
             }
-            //tutaj drugi for od linii rysujący część ziemną 
+        }
+        for(int i = 0; i < ocean->arr_ships.size(); i++)
+        {
+            for(int j=0; j<warehouse->arr_trucks[i].size(); j++)
+                {
+                    if(warehouse->arr_trucks[i][j] != 0)
+                    {
+                        mvprintw(j, i + warehouse->arr_trucks[i].size(), "="); //"%d", ocean->arr_ships[i][j]);
+                    }
+                    else
+                    {
+                        //tutaj jakieś rysowanie drogi
+                        //if((i < ocean->sluiveO->x || i > ocean->sluiveO->x+ocean->sluiveO->len) || j == ocean->sluiveO->y)
+                            mvprintw(j, i + warehouse->arr_trucks[i].size(), ",");
+                        /*else
+                        {
+                            mvprintw(j, i, " ");
+                        }*/
+                    }
+                }
+        }
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));
-
     }
 }
 
