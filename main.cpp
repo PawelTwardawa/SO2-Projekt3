@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     Ocean *ocean = new Ocean('W', 1, 1);
     Warehouse *warehouse = new Warehouse('W', 10, 10, 30, 1); //magazyn 50x50, droga zaczyna się w x=10, kończy w x=10+30, na y=10, ilość pasów = 1
     TrafficLights* trafficLights = new TrafficLights(1);
-    Port * port = new Port(numberCranes, numberTrucks, 5, ocean);
+    Port * port = new Port(numberCranes, numberTrucks, 5, ocean, trucks);
 
 
 
