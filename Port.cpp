@@ -3,13 +3,13 @@
 #include "Port.hpp"
 
 
-Port::Port(int nC, int nT, int nP, Ocean * o, std::vector<Truck*> t)
+Port::Port(int nC, int nT, int nP, Ocean * o)//, std::vector<Truck*> t)
 {
     numberCrunes = nC;
     numberTrucks = nT;
     numberOfPlaces = nP;
     ocean = o;
-    trucks = t;
+    //trucks = t;
 
     for(int i = 0; i < numberCrunes; i++)
     {

@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
             std::cout << "Wprowadzane liczby muszą być większe od zera!\n";
             return -1;
         }
-        if(5 > numberShips || numberShips > 30 || 5 > numberCranes || numberCranes > 10 || 5 > numberTrucks || numberTrucks > 10)
+        if(5 > numberShips || numberShips > 30 || 5 > numberCranes || numberCranes > 10 || 0 > numberTrucks || numberTrucks > 10)
         {
             std::cout << "Wprowadzane liczby muszą być większe niż 5 i nie większe niż 10.\n";
             return -2;
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     Ocean *ocean = new Ocean('W', 1, 1);
     Warehouse *warehouse = new Warehouse('W', 10, 10, 30, 1); //magazyn 50x50, droga zaczyna się w x=10, kończy w x=10+30, na y=10, ilość pasów = 1
     TrafficLights* trafficLights = new TrafficLights(1);
-    Port * port = new Port(numberCranes, numberTrucks, 5, ocean, trucks);
+    Port * port = new Port(numberCranes, numberTrucks, 5, ocean);//, trucks);
 
 
 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     }
     for(int i = 0; i < numberTrucks; i++)
     {
-        Truck *t = new Truck(i+1, 1, 1, i+1, 0, 1, warehouse, 'E', 10, trafficLights);
+        Truck *t = new Truck(i+1, 1, 1, i+1, 0, 1, warehouse, 'E', 10, trafficLights, port);
         trucks.push_back(t);
     }
 
