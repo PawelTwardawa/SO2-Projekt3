@@ -241,7 +241,7 @@ void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka j
 void Truck::EntryRoad()
 {
     int dir = 1;
-    if(y > warH->roadY)
+    if(y >= warH->roadY)
         dir = -1;
 
     //ciężarówka przejeżdża na tor do wjazdu na drogę
@@ -252,12 +252,12 @@ void Truck::EntryRoad()
     warH->mutexWarh.unlock();
     std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
 
-    while (y != warH->roadY)
+    while (y - warH->roadY != 0)
     {
         warH->mutexWarh.lock();
         warH->arr_trucks[x][y] = 0;
         //y = y + 1 * dir;
-        y.exchange(y+1, std::memory_order::memory_order_acq_rel);
+        y.exchange(y+1*dir, std::memory_order::memory_order_acq_rel);
         warH->arr_trucks[x][y] = nr;
         warH->mutexWarh.unlock();
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
