@@ -16,6 +16,10 @@ public:
     int sizeX;
     int sizeY;
     std::mutex mutexWarh;
+    int roadX;                      //parametry drogi
+    int roadY;
+    int roadLength;
+    int numRoads;                   //ilość pasów jednej jezdni
 
     std::array<int, 10> *arr;
     //std::array<std::array<std::atomic<int>, 50>, 50> arr_ships;
@@ -23,7 +27,7 @@ public:
     //std::atomic<std::array<std::array<Ship, 10>, 10>> **ships_arr;
 
     Warehouse();
-    Warehouse(char wD);
+    Warehouse(char wD, int X, int Y, int rL, int nR);
 
     void ChangeConditions();
 };

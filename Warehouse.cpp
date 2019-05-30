@@ -23,13 +23,24 @@ Warehouse::Warehouse()
     }   
     sizeX = 15;
     sizeY = 50;
+
+    roadX = 5;
+    roadY = 10;
+    roadLength = 20;
+    numRoads = 1;
+
 }
 
-Warehouse::Warehouse(char wD)
+Warehouse::Warehouse(char wD, int X, int Y, int rL, int nR)
 {
     windDirection = wD;
     sizeX = 15;
     sizeY = 50;
+
+    roadX = X;
+    roadY = Y;
+    roadLength = rL;
+    numRoads = nR;
 }
 
 void Warehouse::ChangeConditions()
