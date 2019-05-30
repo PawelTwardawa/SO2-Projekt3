@@ -2,10 +2,12 @@
 #include "Ship.hpp"
 
 
-Ui::Ui(Ocean * o, Port * p, std::vector<Ship*> *s)
+Ui::Ui(Ocean * o, Port * p, std::vector<Ship*> *s, Warehouse *w)
 {
     ocean = o;
+    warehouse = w;
     port = p;
+
 
     initscr();
     noecho();
@@ -59,6 +61,27 @@ void Ui::Update()
             }
         }
 
+        for(int i = 0; i < ocean->arr_ships.size(); i++)
+        {
+            for(int j=0; j<warehouse->arr_trucks[i].size(); j++)
+                {
+                    if(warehouse->arr_trucks[i][j] != 0)
+                    {
+                        mvprintw(j, i + warehouse->arr_trucks[i].size(), "="); //"%d", ocean->arr_ships[i][j]);
+                    }
+                    else
+                    {
+                        //tutaj jakieś rysowanie drogi
+                        if((j == warehouse->roadY-1 || j == warehouse->roadY+(warehouse->numRoads*2+1) || j == warehouse->roadY+(warehouse->numRoads)) && i >= warehouse->roadY && i <= warehouse->roadY+warehouse->roadLength)
+                            mvprintw(j, i +10+ warehouse->arr_trucks[i].size(), "_");
+                        else
+                        {
+                            mvprintw(j, i +10+ warehouse->arr_trucks[i].size(), " ");
+                        }
+                    }
+                }
+        }
+
         for(int i = 0; i < port->cranes.size(); i++)
         {
             if(port->cranes[i]->isUsed)
@@ -87,7 +110,6 @@ void Ui::Update()
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));
-
     }
 }
 
