@@ -1,10 +1,13 @@
 #include "Ui.hpp"
+#include "Ship.hpp"
 
 
-Ui::Ui(Ocean * o, Warehouse *w)
+Ui::Ui(Ocean * o, Port * p, std::vector<Ship*> *s, Warehouse *w)
 {
     ocean = o;
     warehouse = w;
+    port = p;
+
 
     initscr();
     noecho();
@@ -14,12 +17,29 @@ Ui::Ui(Ocean * o, Warehouse *w)
     use_default_colors();
     curs_set(0);
 
+    ships = s;
+
 }
 
 void Ui::Update()
 {
-    while (true)
+    bool working = true;
+    char craneAnim = '\\';
+    while (working)
     {
+
+        int c = getch();
+        if(c == 113)
+        {
+            for(auto s : *ships)
+            {
+                s->working = false;
+            }
+            //endwin();
+            working = false;
+            return;
+        }
+
         clrtoeol();
         for(int i = 0; i < ocean->arr_ships.size(); i++)
         {
@@ -40,6 +60,7 @@ void Ui::Update()
                 }
             }
         }
+
         for(int i = 0; i < ocean->arr_ships.size(); i++)
         {
             for(int j=0; j<warehouse->arr_trucks[i].size(); j++)
@@ -52,13 +73,39 @@ void Ui::Update()
                     {
                         //tutaj jakieś rysowanie drogi
                         if((j == warehouse->roadY-1 || j == warehouse->roadY+(warehouse->numRoads*2+1) || j == warehouse->roadY+(warehouse->numRoads)) && i >= warehouse->roadY && i <= warehouse->roadY+warehouse->roadLength)
-                            mvprintw(j, i + warehouse->arr_trucks[i].size(), "_");
+                            mvprintw(j, i +10+ warehouse->arr_trucks[i].size(), "_");
                         else
                         {
-                            mvprintw(j, i + warehouse->arr_trucks[i].size(), " ");
+                            mvprintw(j, i +10+ warehouse->arr_trucks[i].size(), " ");
                         }
                     }
                 }
+        }
+
+        for(int i = 0; i < port->cranes.size(); i++)
+        {
+            if(port->cranes[i]->isUsed)
+            {
+                if(craneAnim == '\\')
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
+                    craneAnim = '|';
+                }
+                else if(craneAnim == '|')
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "/");
+                    craneAnim = '/';
+                }
+                else
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "\\");
+                    craneAnim = '\\';
+                }
+            }
+            else
+            {
+            mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
+            }
         }
         refresh();
 

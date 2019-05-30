@@ -11,6 +11,7 @@
 #include "Truck.hpp"
 #include "Warehouse.hpp"
 #include "TrafficLights.hpp"
+#include "Port.hpp"
 
 //Program dostaje ilość statków, ilość żurawi i ilość ciężarówek
 
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
             std::cout << "Wprowadzane liczby muszą być większe od zera!\n";
             return -1;
         }
-        if(5 > numberShips || numberShips > 10 || 5 > numberCranes || numberCranes > 10 || 5 > numberTrucks || numberTrucks > 10)
+        if(5 > numberShips || numberShips > 30 || 5 > numberCranes || numberCranes > 10 || 5 > numberTrucks || numberTrucks > 10)
         {
             std::cout << "Wprowadzane liczby muszą być większe niż 5 i nie większe niż 10.\n";
             return -2;
@@ -54,11 +55,13 @@ int main(int argc, char* argv[])
     Ocean *ocean = new Ocean('W', 1, 1);
     Warehouse *warehouse = new Warehouse('W', 10, 10, 30, 1); //magazyn 50x50, droga zaczyna się w x=10, kończy w x=10+30, na y=10, ilość pasów = 1
     TrafficLights* trafficLights = new TrafficLights(1);
+    Port * port = new Port(numberCranes, numberTrucks, 5, ocean);
+
 
 
     for(int i = 0; i < numberShips; i++)
     {
-        Ship *s = new Ship(i +1, 2,1, i+6, 1, ocean);
+        Ship *s = new Ship(i +1, 2,1, i+6, 1, ocean, port);
         ships.push_back(s);
     }
     for(int i = 0; i < numberTrucks; i++)
@@ -67,18 +70,25 @@ int main(int argc, char* argv[])
         trucks.push_back(t);
     }
 
-    std::thread tu(&Ui::Update, new Ui(ocean, warehouse));
+        //ships.push_back(new Ship(6, 1,1, 6+6, 1, ocean, port)); //dodatkowe statki
+        //ships.push_back(new Ship(7, 5,1, 7+6, 1, ocean, port)); 
 
+    std::thread tu(&Ui::Update, new Ui(ocean, port, &ships, warehouse));
+    std::cout<< "koniec";
     tu.join();
-
+    std::cout<< "koniec";
     for(auto s : ships)
     {
         s->t.join();
     }
+
     for(auto t : trucks)
     {
         t->threadT.join();
     }
+
+    std::cout<< "koniec";
+    endwin();
 
     return 0;
 }

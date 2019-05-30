@@ -1,5 +1,7 @@
 #include "Ocean.hpp"
 #include "Warehouse.hpp"
+#include "Port.hpp"
+
 
 #include <map>
 #include <ncurses.h>
@@ -10,7 +12,9 @@ class Ui
     public:
         Ocean * ocean;
         Warehouse *warehouse;
-        Ui(Ocean * o, Warehouse *w);
+        Port * port;
+        std::vector<Ship*> *ships;
+        Ui(Ocean * o, Port * p, std::vector<Ship*> *ships, Warehouse *w);
         ~Ui();
         void Update();
         
