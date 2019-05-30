@@ -37,5 +37,6 @@ public:
     void EntryHarbor();
     void EntryRoad();
     void MoveToPoint(int x, int y);
+    void MoveToPointV2(int x, int y);
     void MoveToCrane(int x, int y);
 };
