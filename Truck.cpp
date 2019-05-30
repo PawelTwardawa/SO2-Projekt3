@@ -45,17 +45,6 @@ void Truck::Load()
     // status = 0;
 }
 
-void Truck::Unload()
-{
-    int div = 10;
-    for(int i; i<div; i++)
-    {
-        //std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
-        status += 100/div;
-    }
-    status = 0;
-}
-
 void Truck::MoveToPoint(int dx, int dy)
 {
     bool moved = false;
@@ -166,11 +155,6 @@ void Truck::Move()
             {
                 EntryHarbor();
                 dirC = 'E';
-            }
-        }
-
-
-                
             }
         }
         else
