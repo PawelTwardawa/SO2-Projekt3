@@ -39,28 +39,80 @@ void Ship::Move()
         //{
             if(x >= ocean->length - 10 && dirC == 'E')
             {
+                //dopoki czeka na rozladowanie
                 while(waitForCrane)
                 {
-                    for(int i = 0; i < port->numberCrunes; i++)
+                    //sprawdzamy czy mozemy rozladowac za pomoca 1 zurawia czy wiecej
+                    if(capacity == 1)
                     {
-                        if(port->crunes[i]->mutex.try_lock())
+                        //szukamy wolnego zurawia
+                        for(int i = 0; i < port->numberCrunes; i++)
                         {
-                            MoveToCrane(port->crunes[i]->x-2, port->crunes[i]->y);
-                            port->crunes[i]->Do();
-                            port->crunes[i]->mutex.unlock();
+                            if(port->cranes[i]->mutex.try_lock())
+                            {
+                                MoveToCrane(port->cranes[i]->x-1, port->cranes[i]->y);
+                                port->cranes[i]->Do();
+                                port->cranes[i]->mutex.unlock();
 
-                            direction *= -1;
-                            if(dirC == 'E')
-                                dirC = 'W';
-                            else
-                                dirC = 'E';
+                                direction *= -1;
+                                if(dirC == 'E')
+                                    dirC = 'W';
+                                else
+                                    dirC = 'E';
 
-                            waitForCrane = false;
-                            break;
+                                waitForCrane = false;
+                                break;
+                            }
+                            else 
+                            {
+                                waitForCrane = true;
+                            }
                         }
-                        else 
+                    }
+                    else 
+                    {
+                        for(int i = 0; i < port->numberCrunes -1; i++)
                         {
-                            waitForCrane = true;
+                            //proba blokowania pierwszego zurawia
+                            if(port->cranes[i]->mutex.try_lock())
+                            {
+                                //proba zablokowania 2 zurawia, jezeli zuraw jest zajety odblokowywujemy tez pierwszy
+                                if(port->cranes[i + 1]->mutex.try_lock())
+                                {
+                                    std::lock_guard<std::mutex> c1(port->cranes[i]->mutex, std::adopt_lock);
+                                    
+                                    std::lock_guard<std::mutex> c2(port->cranes[i+1]->mutex, std::adopt_lock);
+
+                                    // y+ 1 bo staje pomiedzy zurawiami
+                                    MoveToCrane(port->cranes[i]->x-1, port->cranes[i]->y+1);
+
+                                    //robimy to w osobnych watkach bo musza pracować w tym samym czasie
+                                    std::thread crane1(&Crane::Do, port->cranes[i]);
+                                    std::thread crane2(&Crane::Do, port->cranes[i + 1]);
+
+                                    //czekamy az watki zakoncza prace
+                                    crane1.join();
+                                    crane2.join();              
+                                }
+                                else 
+                                {
+                                    port->cranes[i]->mutex.unlock();
+                                    break;
+                                }
+                                //zmiana kierunku statku
+                                direction *= -1;
+                                if(dirC == 'E')
+                                    dirC = 'W';
+                                else
+                                    dirC = 'E';
+
+                                waitForCrane = false;
+                                break;
+                            }
+                            else 
+                            {
+                                waitForCrane = true;
+                            }
                         }
                     }
                 }
@@ -76,8 +128,6 @@ void Ship::Move()
 
                 waitForCrane = true;
             }
-
-        
 
             if(!isSailInSluice)
             {
@@ -107,32 +157,8 @@ void Ship::Move()
 
             MoveToPoint(dx, dy);
 
-
-            // while(!moved)
-            // {
-            //     ocean->m.lock();
-
-            //     if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
-            //     {
-            //         moved = true;
-
-            //         ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
-            //         ocean->arr_ships[x][y] = 0;
-                    
-            //         y = ceil(dy);
-            //         x = ceil(dx);
-            //     }
-            //     else
-            //     {
-            //         //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            //     }
-
-            //     ocean->m.unlock();
-            // }
             std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
-        //}
-    }
-    
+    }   
 }
 
 void Ship::MoveToCrane(int _x, int _y)
@@ -141,16 +167,14 @@ void Ship::MoveToCrane(int _x, int _y)
     double dy;
     bool moved;
     
-    //mvprintw(6, 60, "%s", "while");
 
+    MoveToPoint(x + 1, y);
+    //dopoki statek nie doplynie do zurawia
     while (x != _x || y != _y )
     {
-
-
-         moved = false;
-
-
-        if(std::abs(x - _x) >  std::abs(y - _y))
+        moved = false;
+        //sprawdzamy w ktorej osi ma dalej do celu
+        if(std::abs(x - _x) >=  std::abs(y - _y))
         {
             if(x > _x)
             {
@@ -173,34 +197,11 @@ void Ship::MoveToCrane(int _x, int _y)
              {
                 dy = y +1;
              }
-        }
-        
+        }        
         MoveToPoint(dx, dy);
 
-        // while(!moved)
-        // {
-        //     ocean->m.lock();
-
-        //     if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
-        //     {
-        //         moved = true;
-
-        //         ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
-        //         ocean->arr_ships[x][y] = 0;
-                
-        //         y = ceil(dy);
-        //         x = ceil(dx);
-        //     }
-        //     else
-        //     {
-        //         //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        //     }
-
-        //     ocean->m.unlock();
-        // }
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
-
 }
 
 void Ship::MoveToSluice()
@@ -224,27 +225,6 @@ void Ship::MoveToSluice()
         
         MoveToPoint(dx, dy);
 
-        // while(!moved)
-        // {
-        //     ocean->m.lock();
-
-        //     if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
-        //     {
-        //         moved = true;
-
-        //         ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
-        //         ocean->arr_ships[x][y] = 0;
-                
-        //         y = ceil(dy);
-        //         x = ceil(dx);
-        //     }
-        //     else
-        //     {
-        //         //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        //     }
-
-        //     ocean->m.unlock();
-        // }
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
 }
@@ -265,28 +245,6 @@ void Ship::MoveFromSluice()
         dy = y+(1*dir); 
         
         MoveToPoint(dx, dy);
-
-        // while(!moved)
-        // {
-        //     ocean->m.lock();
-
-        //     if(ocean->arr_ships[ceil(dx)][ceil(dy)] == 0)
-        //     {
-        //         moved = true;
-
-        //         ocean->arr_ships[ceil(dx)][ceil(dy)] = nr;
-        //         ocean->arr_ships[x][y] = 0;
-                
-        //         y = ceil(dy);
-        //         x = ceil(dx);
-        //     }
-        //     else
-        //     {
-        //         //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        //     }
-
-        //     ocean->m.unlock();
-        // }
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
 }
@@ -295,6 +253,7 @@ void Ship::MoveToPoint(int dx, int dy)
 {
     bool moved = false;
 
+    //dopoki nie zmiani pozycji, czeka
     while(!moved)
     {
         ocean->m.lock();
@@ -309,6 +268,7 @@ void Ship::MoveToPoint(int dx, int dy)
             y = ceil(dy);
             x = ceil(dx);
         }
+        //jezeli pozycja dx, dy jest zajeta omijamy ja albo gora albo dolem
         else if(ocean->arr_ships[ceil(dx)][ceil(dy - 1)] == 0)
         {
             moved = true;
@@ -330,7 +290,6 @@ void Ship::MoveToPoint(int dx, int dy)
             x = ceil(dx);
         }
         
-
         ocean->m.unlock();
     }
 }

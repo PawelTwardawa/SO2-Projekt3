@@ -10,5 +10,9 @@ Crane::Crane(int N, int px, int py)
 
 void Crane::Do()
 {
+    isUsed = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+
+
+    isUsed = false;
 }

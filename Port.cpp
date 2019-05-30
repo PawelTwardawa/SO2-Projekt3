@@ -12,7 +12,7 @@ Port::Port(int nC, int nT, int nP, Ocean * o)
 
     for(int i = 0; i < numberCrunes; i++)
     {
-        crunes.push_back(new Crane(i, o->arr_ships.size(), i *2 ));
+        cranes.push_back(new Crane(i, o->arr_ships.size(), i *2 ));
     }
 
     for(int i = 0; i < numberTrucks; i++)

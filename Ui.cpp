@@ -18,6 +18,7 @@ Ui::Ui(Ocean * o, Port * p)
 
 void Ui::Update()
 {
+    char craneAnim = '\\';
     while (true)
     {
 
@@ -42,9 +43,30 @@ void Ui::Update()
             }
         }
 
-        for(int i = 0; i < port->crunes.size(); i++)
+        for(int i = 0; i < port->cranes.size(); i++)
         {
-            mvprintw(port->crunes[i]->y, port->crunes[i]->x, "@");
+            if(port->cranes[i]->isUsed)
+            {
+                if(craneAnim == '\\')
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
+                    craneAnim = '|';
+                }
+                else if(craneAnim == '|')
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "/");
+                    craneAnim = '/';
+                }
+                else
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "\\");
+                    craneAnim = '\\';
+                }
+            }
+            else
+            {
+            mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
+            }
         }
         refresh();
 
