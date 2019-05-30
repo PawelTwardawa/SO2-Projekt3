@@ -37,6 +37,7 @@ void Ui::Update()
                     }
                 }
             }
+            //tutaj drugi for od linii rysujący część ziemną 
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));
