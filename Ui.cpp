@@ -107,6 +107,34 @@ void Ui::Update()
             mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
             }
         }
+
+
+        for(int j=0; j<=15; j++)//rysowanie magazynu
+        {
+            for(int i=0; i<12; i++)
+            {
+                if((j == 10 || j == 12) && i == 2)//przednia ściana
+                {
+                    mvprintw(j, i + ocean->length + warehouse->roadY+warehouse->roadLength, "]");
+                }
+                else if(j>7 && j<15 && i == 2)
+                {
+                    mvprintw(j, i + ocean->length + warehouse->roadY+warehouse->roadLength, "|");
+                }
+
+                if(j>7 && j<15 && i == 10)//tylna ściana
+                {
+                    mvprintw(j, i + ocean->length + warehouse->roadY+warehouse->roadLength, "|");
+                }
+
+                if((j == 7 || j == 15) && (i >= 2 && i <= 10))//górna ściana
+                {
+                    mvprintw(j, i + ocean->length + warehouse->roadY+warehouse->roadLength, "_");
+                }
+
+            }
+        }
+
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));
