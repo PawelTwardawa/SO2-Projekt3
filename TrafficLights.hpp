@@ -1,3 +1,4 @@
+#pragma once
 //Ciężarówka blokuje światła, żeby wjechać na drogę
 #include <mutex>
 
