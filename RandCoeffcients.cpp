@@ -6,7 +6,7 @@ RandCoeffcients::RandCoeffcients(int t, Ocean *o)
     time = t;
 }
 
-void RandCoeffcients::Rand()
+void RandCoeffcients::RandW()
 {
     while (true)
     {
@@ -30,6 +30,6 @@ void RandCoeffcients::Rand()
             break;
         }   
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(4000 * timeOperation + (rand() % 100)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(4000 * time + (rand() % 100)));
     }    
 }

@@ -11,5 +11,5 @@ public:
     Ocean *ocean;
 
     RandCoeffcients(int t, Ocean *o);
-    void Rand();
+    void RandW();
 };

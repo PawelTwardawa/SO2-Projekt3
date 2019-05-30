@@ -12,6 +12,7 @@
 #include "Warehouse.hpp"
 #include "TrafficLights.hpp"
 #include "Port.hpp"
+#include "RandCoeffcients.hpp"
 
 //Program dostaje ilość statków, ilość żurawi i ilość ciężarówek
 
@@ -74,11 +75,12 @@ int main(int argc, char* argv[])
         //ships.push_back(new Ship(7, 5,1, 7+6, 1, ocean, port)); 
 
     std::thread tu(&Ui::Update, new Ui(ocean, port, &ships, warehouse));
+    std::thread weather(&RandCoeffcients::RandW, new RandCoeffcients(2, ocean));
 
 
     std::cout<< "koniec";
     tu.join();
-    //weather.join();
+    weather.join();
     std::cout<< "koniec";
     for(auto s : ships)
     {
