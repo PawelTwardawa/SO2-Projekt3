@@ -26,7 +26,7 @@ Ocean::Ocean()
     stormValue = rand() % 3 + 1;
 }
 
-Ocean::Ocean(char wD, short wH, short sV)
+Ocean::Ocean(char wD, int wH, int sV)
 {
     windDirection = wD;
     waveHight = wH;

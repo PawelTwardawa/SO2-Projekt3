@@ -136,6 +136,37 @@ void Ui::Update()
             }
         }
 
+        //rysowanie statystyk morza
+        mvprintw(1, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "Wind Direction:");
+        switch (ocean->windDirection.load())
+        {
+        case 'S':
+        mvprintw(2, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "S");
+            break;
+        case 'W':
+            mvprintw(2, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "W");
+            break;
+        case 'E':
+            mvprintw(2, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "E");
+            break;
+        default:
+            mvprintw(2, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "N");
+            break;
+        }
+        mvprintw(3, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "Storm:");//storm
+        if(ocean->stormValue >= 5)
+            mvprintw(4, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "ON");
+        else
+            mvprintw(4, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "OFF");
+
+        mvprintw(5, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "Wave hight:");//fale
+        if(ocean->waveHight >= 3)
+            mvprintw(6, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "Low");
+        else if(ocean->waveHight >= 7)
+            mvprintw(6, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "Medium");
+        else 
+            mvprintw(6, 24 + ocean->length + warehouse->roadY+warehouse->roadLength, "High");
+
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));

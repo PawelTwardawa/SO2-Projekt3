@@ -26,8 +26,8 @@ class Ocean
 {
 public:
     std::atomic<char> windDirection;
-    std::atomic<short> waveHight;
-    std::atomic<short> stormValue;
+    std::atomic<int> waveHight;
+    std::atomic<int> stormValue;
     std::mutex m;
     Sluice *sluiveO;
     int length;
@@ -38,5 +38,5 @@ public:
     //std::atomic<std::array<std::array<Ship, 10>, 10>> **ships_arr;
 
     Ocean();
-    Ocean(char wD, short wH, short sV);
+    Ocean(char wD, int wH, int sV);
 };
