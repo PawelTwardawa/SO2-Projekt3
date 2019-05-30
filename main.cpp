@@ -74,8 +74,11 @@ int main(int argc, char* argv[])
         //ships.push_back(new Ship(7, 5,1, 7+6, 1, ocean, port)); 
 
     std::thread tu(&Ui::Update, new Ui(ocean, port, &ships, warehouse));
+
+
     std::cout<< "koniec";
     tu.join();
+    //weather.join();
     std::cout<< "koniec";
     for(auto s : ships)
     {

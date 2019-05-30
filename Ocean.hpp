@@ -25,9 +25,9 @@ class Ship;
 class Ocean
 {
 public:
-    char windDirection;
-    short waveHight;
-    short stormValue;
+    std::atomic<char> windDirection;
+    std::atomic<short> waveHight;
+    std::atomic<short> stormValue;
     std::mutex m;
     Sluice *sluiveO;
     int length;
