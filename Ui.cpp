@@ -1,9 +1,10 @@
 #include "Ui.hpp"
 
 
-Ui::Ui(Ocean * o)
+Ui::Ui(Ocean * o, Port * p)
 {
     ocean = o;
+    port = p;
 
     initscr();
     noecho();
@@ -19,8 +20,10 @@ void Ui::Update()
 {
     while (true)
     {
+
         clrtoeol();
         for(int i = 0; i < ocean->arr_ships.size(); i++)
+        {
             for(int j = 0; j < ocean->arr_ships[i].size(); j++)
             {
                 if(ocean->arr_ships[i][j] != 0)
@@ -37,6 +40,12 @@ void Ui::Update()
                     }
                 }
             }
+        }
+
+        for(int i = 0; i < port->crunes.size(); i++)
+        {
+            mvprintw(port->crunes[i]->y, port->crunes[i]->x, "@");
+        }
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));

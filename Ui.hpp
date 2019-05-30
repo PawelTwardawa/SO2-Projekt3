@@ -1,4 +1,5 @@
 #include "Ocean.hpp"
+#include "Port.hpp"
 
 #include <map>
 #include <ncurses.h>
@@ -8,7 +9,8 @@ class Ui
 {
     public:
         Ocean * ocean;
-        Ui(Ocean * o);
+        Port * port;
+        Ui(Ocean * o, Port * p);
         ~Ui();
         void Update();
         
