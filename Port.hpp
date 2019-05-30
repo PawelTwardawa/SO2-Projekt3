@@ -15,7 +15,7 @@ class Port
         Ocean * ocean;
 
         std::vector<Crane*> cranes;
-        std::vector<Truck*> trucks;
+        //std::vector<Truck*> trucks;
 
-        Port(int nC, int nT, int nP, Ocean * o, std::vector<Truck*> t);
+        Port(int nC, int nT, int nP, Ocean * o);//, std::vector<Truck*> t);
 };

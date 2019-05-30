@@ -5,8 +5,12 @@
 //Ciężarówki mają ograniczenie prędkości i nie mogą się ścigać
 #include "Warehouse.hpp"
 #include "TrafficLights.hpp"
+#include "Port.hpp"
+
 #include <thread>
 #include <atomic>
+
+class Port;
 
 class Truck 
 {
@@ -23,13 +27,16 @@ public:
     char dirC;                                  //kierunek jazdy ciężarówki
     std::thread threadT;
     int timeOperation;                          //czas operacji rozładunku/załadunku
+    Port * port;
 
 
-    Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL);
+    Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL, Port * p);
     void Load();
     void Unload();
     void Move();
     void EntryWarehouse();
     void EntryHarbor();
     void EntryRoad();
+    void MoveToPoint(int x, int y);
+    void MoveToCrane(int x, int y);
 };

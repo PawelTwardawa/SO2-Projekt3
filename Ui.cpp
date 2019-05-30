@@ -84,7 +84,8 @@ void Ui::Update()
 
         for(int i = 0; i < port->cranes.size(); i++)
         {
-            if(port->cranes[i]->isUsed)
+            //if(port->cranes[i]->isUsed && port->cranes[i]->haveTruck)
+            if(port->cranes[i]->status == CraneStatus::Working)
             {
                 if(craneAnim == '\\')
                 {

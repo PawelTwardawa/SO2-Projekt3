@@ -3,7 +3,7 @@
 #include <cmath>
 #include <stdlib.h>
 
-Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL)
+Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL, Port * p)
 {
     isFull = false;
     nr = N;
@@ -17,17 +17,31 @@ Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC,
     timeOperation = tO;
     threadT = std::thread(&Truck::Move, this);
     tLights = tL;
+    port = p;
 }
 
 void Truck::Load()
 {
-    int div = 10;
-    for(int i; i<div; i++)
+    for(int i = 0; i < port->cranes.size(); i++)
     {
-        //std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
-        status += 100/div;
+        if(!port->cranes[i]->mutex.try_lock())
+        {
+            MoveToCrane(port->cranes[i]->x, port->cranes[i]->y);
+        }
+        else
+        {
+            port->cranes[i]->mutex.unlock();
+        }
+        
     }
-    status = 0;
+
+    // int div = 10;
+    // for(int i; i<div; i++)
+    // {
+    //     std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
+    //     status += 100/div;
+    // }
+    // status = 0;
 }
 
 void Truck::Unload()
@@ -41,6 +55,77 @@ void Truck::Unload()
     status = 0;
 }
 
+void Truck::MoveToPoint(int dx, int dy)
+{
+    bool moved = false;
+    while(!moved)
+    {
+        warH->mutexWarh.lock();
+
+        if(warH->arr_trucks[ceil(dx)][ceil(dy)] == 0)
+        {
+            moved = true;
+
+            warH->arr_trucks[ceil(dx)][ceil(dy)] = nr;
+            warH->arr_trucks[x][y] = 0;
+            
+            y = ceil(dy);
+            x = ceil(dx);
+        }
+        else
+        {
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+
+        warH->mutexWarh.unlock();
+    }
+    
+}
+
+void Truck::MoveToCrane(int _x, int _y)
+{
+    double dx;
+    double dy;
+    bool moved;
+    
+
+    //MoveToPoint(x - 1, y);
+    //dopoki statek nie doplynie do zurawia
+    while (x != _x || y != _y)
+    {
+        moved = false;
+        //sprawdzamy w ktorej osi ma dalej do celu
+        if(std::abs(x - _x) >=  std::abs(y - _y))
+        {
+            if(x > _x)
+            {
+                dx = x -1;
+            }
+            else
+            {
+                dx = x+1;
+            }
+            dy = y;
+        }
+        else 
+        {
+             dx = x;
+             if(y > _y)
+             {
+                 dy = y -1;
+             }
+             else
+             {
+                dy = y +1;
+             }
+        }        
+        MoveToPoint(dx, dy);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
+    }
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+}
+
 void Truck::Move()
 {
     double dx;
@@ -50,6 +135,23 @@ void Truck::Move()
     
     while (true)
     {
+        // if(x <= warH->roadX && dirC == 'W')
+        // {
+        //     for(int i = 0; i < port->cranes.size(); i++)
+        //     {
+        //         if(!port->cranes[i]->mutex.try_lock())
+        //         {
+        //             MoveToCrane(port->cranes[i]->x - warH->arr_trucks.size() + 1, port->cranes[i]->y);
+        //         }
+        //         else
+        //         {
+        //             port->cranes[i]->mutex.unlock();
+        //         }
+                
+        //     }
+        //    //std::this_thread::sleep_for(std::chrono::milliseconds(1000)); 
+        // }
+        // else 
         if((x >= warH->roadX+warH->roadLength+2 && dirC == 'E') || (x <= warH->roadX-2 && dirC == 'W')) // ciężarówka zawraca
         {
             direction *= -1;
@@ -60,55 +162,42 @@ void Truck::Move()
             }
             else
             {
-                dirC = 'E';
-                EntryHarbor();
-            }
-        }
+                 dirC = 'E';
+                 EntryHarbor();
 
-        dx = x + 1 * direction;
-        moved = false;
-        dy = y;
-
-        if(x == warH->roadX-3 && dirC == 'E')//wyjazd z portu, ciężarówka czeka na pozwolenie wyjazdu
-        {
-            tLights->mRoad.lock();
-            
-            {
-                EntryRoad();
+                
             }
-            tLights->mRoad.unlock();
         }
         else
         {
-            while(!moved)
+            
+
+            dx = x + 1 * direction;
+            moved = false;
+            dy = y;
+
+            if(x == warH->roadX-3 && dirC == 'E')//wyjazd z portu, ciężarówka czeka na pozwolenie wyjazdu
             {
-                warH->mutexWarh.lock();
-
-                if(warH->arr_trucks[ceil(dx)][ceil(dy)] == 0)
+                tLights->mRoad.lock();
+                
                 {
-                    moved = true;
-
-                    warH->arr_trucks[ceil(dx)][ceil(dy)] = nr;
-                    warH->arr_trucks[x][y] = 0;
-                    
-                    y = ceil(dy);
-                    x = ceil(dx);
+                    EntryRoad();
                 }
-                else
-                {
-                    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                }
-
-                warH->mutexWarh.unlock();
+                tLights->mRoad.unlock();
             }
+            else
+            {
+
+                MoveToPoint(dx, dy);
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
 }
 
 void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarówka jest pas wyżej
 {
-    Load();
+    Unload();
     warH->mutexWarh.lock();
     warH->arr_trucks[x][y] = 0;
     y = y + 2;
@@ -118,12 +207,42 @@ void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarów
 
 void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka jest pas niżej
 {
-    Unload();
-    warH->mutexWarh.lock();
-    warH->arr_trucks[x][y] = 0;
-    y = y - 2;
-    warH->arr_trucks[x][y] = nr;
-    warH->mutexWarh.unlock(); 
+    bool find = false;
+    Crane * crane;
+    while(!find)
+    {
+        for(int i = 0; i < port->cranes.size(); i++)
+        {
+            if(port->cranes[i]->isUsed && !port->cranes[i]->haveTruck)
+            {
+                crane = port->cranes[i];
+                port->cranes[i]->haveTruck = true;
+                MoveToCrane(port->cranes[i]->x - warH->arr_trucks.size() + 1, port->cranes[i]->y);
+                port->cranes[i]->status = CraneStatus::Working;
+                find = true;
+                break;
+            }
+            else
+            {
+                //port->cranes[i]->mutex.unlock();
+            }
+            
+        }
+    }
+
+    while(crane->isUsed)
+    {
+
+    }
+    crane->haveTruck = false;
+    crane->status = CraneStatus::WaitingForShip;
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+
+    // warH->mutexWarh.lock();
+    // warH->arr_trucks[x][y] = 0;
+    // y = y - 2;
+    // warH->arr_trucks[x][y] = nr;
+    // warH->mutexWarh.unlock(); 
 }
 
 void Truck::EntryRoad()
