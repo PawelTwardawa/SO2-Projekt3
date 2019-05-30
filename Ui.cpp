@@ -73,10 +73,10 @@ void Ui::Update()
                     {
                         //tutaj jakieś rysowanie drogi
                         if((j == warehouse->roadY-1 || j == warehouse->roadY+(warehouse->numRoads*2+1) || j == warehouse->roadY+(warehouse->numRoads)) && i >= warehouse->roadY && i <= warehouse->roadY+warehouse->roadLength)
-                            mvprintw(j, i +10+ warehouse->arr_trucks[i].size(), "_");
+                            mvprintw(j, i + warehouse->arr_trucks[i].size(), "_");
                         else
                         {
-                            mvprintw(j, i +10+ warehouse->arr_trucks[i].size(), " ");
+                            mvprintw(j, i + warehouse->arr_trucks[i].size(), " ");
                         }
                     }
                 }
