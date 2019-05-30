@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
             std::cout << "Wprowadzane liczby muszą być większe od zera!\n";
             return -1;
         }
-        if(5 > numberShips || numberShips > 30 || 5 > numberCranes || numberCranes > 10 || 0 > numberTrucks || numberTrucks > 10)
+        if(5 > numberShips || numberShips > 30 || 5 > numberCranes || numberCranes > 10 || 0 > numberTrucks || numberTrucks > 20)
         {
             std::cout << "Wprowadzane liczby muszą być większe niż 5 i nie większe niż 10.\n";
             return -2;
