@@ -4,6 +4,7 @@
 #include "Ocean.hpp"
 #include "Port.hpp"
 #include <thread>
+#include <atomic>
 
 class Ship
 {
@@ -24,6 +25,7 @@ class Ship
         char dirC;              //kierunek płynięcia statku W, E
         bool canMove;
         bool waitForCrane;
+        std::atomic<bool> working;
 
         Ship(int N, int C, int X, int Y, float S, Ocean * o, Port * p);// : t(&Ship::Move, this){};
         void Move();

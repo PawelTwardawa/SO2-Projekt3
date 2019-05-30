@@ -64,15 +64,17 @@ int main(int argc, char* argv[])
         //ships.push_back(new Ship(6, 1,1, 6+6, 1, ocean, port)); //dodatkowe statki
         //ships.push_back(new Ship(7, 5,1, 7+6, 1, ocean, port)); 
 
-    std::thread tu(&Ui::Update, new Ui(ocean, port));
-
+    std::thread tu(&Ui::Update, new Ui(ocean, port, &ships));
+    std::cout<< "koniec";
     tu.join();
-
+    std::cout<< "koniec";
     for(auto s : ships)
     {
         s->t.join();
     }
 
+    std::cout<< "koniec";
+    endwin();
 
     return 0;
 }

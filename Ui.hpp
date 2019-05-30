@@ -10,7 +10,8 @@ class Ui
     public:
         Ocean * ocean;
         Port * port;
-        Ui(Ocean * o, Port * p);
+        std::vector<Ship*> *ships;
+        Ui(Ocean * o, Port * p, std::vector<Ship*> *ships);
         ~Ui();
         void Update();
         

@@ -1,7 +1,8 @@
 #include "Ui.hpp"
+#include "Ship.hpp"
 
 
-Ui::Ui(Ocean * o, Port * p)
+Ui::Ui(Ocean * o, Port * p, std::vector<Ship*> *s)
 {
     ocean = o;
     port = p;
@@ -14,13 +15,28 @@ Ui::Ui(Ocean * o, Port * p)
     use_default_colors();
     curs_set(0);
 
+    ships = s;
+
 }
 
 void Ui::Update()
 {
+    bool working = true;
     char craneAnim = '\\';
-    while (true)
+    while (working)
     {
+
+        int c = getch();
+        if(c == 113)
+        {
+            for(auto s : *ships)
+            {
+                s->working = false;
+            }
+            //endwin();
+            working = false;
+            return;
+        }
 
         clrtoeol();
         for(int i = 0; i < ocean->arr_ships.size(); i++)
