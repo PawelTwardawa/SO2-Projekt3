@@ -2,7 +2,9 @@
 #pragma once
 
 #include "Ocean.hpp"
+#include "Port.hpp"
 #include <thread>
+#include <atomic>
 
 class Ship
 {
@@ -18,11 +20,17 @@ class Ship
         int storm;
         float speed;
         Ocean * ocean;
+        Port * port;
         bool isSailInSluice;    //czy statek płynie w śluzie
         char dirC;              //kierunek płynięcia statku W, E
+        bool canMove;
+        bool waitForCrane;
+        std::atomic<bool> working;
 
-        Ship(int N, int C, int X, int Y, float S, Ocean * o);// : t(&Ship::Move, this){};
+        Ship(int N, int C, int X, int Y, float S, Ocean * o, Port * p);// : t(&Ship::Move, this){};
         void Move();
         void MoveToSluice();
         void MoveFromSluice();
+        void MoveToCrane(int x, int y);
+        void MoveToPoint(int dx, int dy);
 };

@@ -1,4 +1,5 @@
 #include "Ocean.hpp"
+#include "Port.hpp"
 
 #include <map>
 #include <ncurses.h>
@@ -8,7 +9,9 @@ class Ui
 {
     public:
         Ocean * ocean;
-        Ui(Ocean * o);
+        Port * port;
+        std::vector<Ship*> *ships;
+        Ui(Ocean * o, Port * p, std::vector<Ship*> *ships);
         ~Ui();
         void Update();
         

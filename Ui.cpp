@@ -1,9 +1,11 @@
 #include "Ui.hpp"
+#include "Ship.hpp"
 
 
-Ui::Ui(Ocean * o)
+Ui::Ui(Ocean * o, Port * p, std::vector<Ship*> *s)
 {
     ocean = o;
+    port = p;
 
     initscr();
     noecho();
@@ -13,14 +15,32 @@ Ui::Ui(Ocean * o)
     use_default_colors();
     curs_set(0);
 
+    ships = s;
+
 }
 
 void Ui::Update()
 {
-    while (true)
+    bool working = true;
+    char craneAnim = '\\';
+    while (working)
     {
+
+        int c = getch();
+        if(c == 113)
+        {
+            for(auto s : *ships)
+            {
+                s->working = false;
+            }
+            //endwin();
+            working = false;
+            return;
+        }
+
         clrtoeol();
         for(int i = 0; i < ocean->arr_ships.size(); i++)
+        {
             for(int j = 0; j < ocean->arr_ships[i].size(); j++)
             {
                 if(ocean->arr_ships[i][j] != 0)
@@ -37,6 +57,33 @@ void Ui::Update()
                     }
                 }
             }
+        }
+
+        for(int i = 0; i < port->cranes.size(); i++)
+        {
+            if(port->cranes[i]->isUsed)
+            {
+                if(craneAnim == '\\')
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
+                    craneAnim = '|';
+                }
+                else if(craneAnim == '|')
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "/");
+                    craneAnim = '/';
+                }
+                else
+                {
+                    mvprintw(port->cranes[i]->y, port->cranes[i]->x, "\\");
+                    craneAnim = '\\';
+                }
+            }
+            else
+            {
+            mvprintw(port->cranes[i]->y, port->cranes[i]->x, "|");
+            }
+        }
         refresh();
 
         std::this_thread::sleep_for(std::chrono::microseconds(500));
