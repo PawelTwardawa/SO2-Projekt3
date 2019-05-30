@@ -212,11 +212,7 @@ void Truck::Move()
                 EntryHarbor();
                 dirC = 'E';
             }
-        }
-
-
-                
-    
+        } 
         
         else
         {
