@@ -50,7 +50,7 @@ void Truck::Move()
     
     while (true)
     {
-        if((x >= warH->roadY+warH->roadLength-1 && dirC == 'E') || (x <= 2 && dirC == 'W')) // ciężarówka zawraca
+        if((x >= warH->roadX+warH->roadLength+2 && dirC == 'E') || (x <= warH->roadX-2 && dirC == 'W')) // ciężarówka zawraca
         {
             direction *= -1;
             if(dirC == 'E')
@@ -69,10 +69,10 @@ void Truck::Move()
         moved = false;
         dy = y;
 
-        if(x == warH->roadX-3)//wyjazd z portu, ciężarówka czeka na pozwolenie wyjazdu
+        if(x == warH->roadX-3 && dirC == 'E')//wyjazd z portu, ciężarówka czeka na pozwolenie wyjazdu
         {
             tLights->mRoad.lock();
-            if(dirC == 'E')
+            
             {
                 EntryRoad();
             }
@@ -80,7 +80,6 @@ void Truck::Move()
         }
         else
         {
-
             while(!moved)
             {
                 warH->mutexWarh.lock();
@@ -129,49 +128,6 @@ void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka j
 
 void Truck::EntryRoad()
 {
-    /*double dy;
-    double dx;
-    int dir = 1;
-    bool moved;
-
-    if(y > warH->roadY)
-        dir = -1;
-
-    warH->mutexWarh.lock();
-    warH->arr_trucks[x][y] = 0;
-    dx = x + 1;
-    warH->arr_trucks[dx][y] = nr;
-    warH->mutexWarh.unlock();
-    std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
-
-    while (y != warH->roadY)
-    {
-        moved = false;
-        dy = y+(1*dir); 
-        
-        while(!moved)
-        {
-            warH->mutexWarh.lock();
-
-            if(warH->arr_trucks[ceil(dx)][ceil(dy)] == 0)
-            {
-                moved = true;
-
-                warH->arr_trucks[x][y] = 0;
-                warH->arr_trucks[x][ceil(dy)] = nr;
-
-                y = ceil(dy);
-            }
-            else
-            {
-                //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
-
-            warH->mutexWarh.unlock();
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
-    }/*/
-
     int dir = 1;
     if(y > warH->roadY)
         dir = -1;
@@ -193,5 +149,5 @@ void Truck::EntryRoad()
         warH->arr_trucks[x][y] = nr;
         warH->mutexWarh.unlock();
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
-    }//*/
+    }
 }

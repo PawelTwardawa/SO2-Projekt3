@@ -44,8 +44,6 @@ int main(int argc, char* argv[])
             std::cout << "Wprowadzane liczby muszą być większe niż 5 i nie większe niż 10.\n";
             return -2;
         }
-
-        numberShips = 30;
     }
     else
     {
