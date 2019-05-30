@@ -45,16 +45,16 @@ void Truck::Load()
     // status = 0;
 }
 
-void Truck::Unload()
-{
-    int div = 10;
-    for(int i; i<div; i++)
-    {
-        //std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
-        status += 100/div;
-    }
-    status = 0;
-}
+// void Truck::Unload()
+// {
+//     int div = 10;
+//     for(int i; i<div; i++)
+//     {
+//         //std::this_thread::sleep_for(std::chrono::milliseconds(timeOperation/div));
+//         status += 100/div;
+//     }
+//     status = 0;
+// }
 
 void Truck::MoveToPoint(int dx, int dy)
 {
@@ -81,6 +81,51 @@ void Truck::MoveToPoint(int dx, int dy)
         warH->mutexWarh.unlock();
     }
     
+}
+
+void Truck::MoveToPointV2(int dx, int dy)
+{
+    bool moved = false;
+
+    //dopoki nie zmiani pozycji, czeka
+    while(!moved)
+    {
+        warH->mutexWarh.lock();
+
+        if(warH->arr_trucks[ceil(dx)][ceil(dy)] == 0)
+        {
+            moved = true;
+
+            warH->arr_trucks[ceil(dx)][ceil(dy)] = nr;
+            warH->arr_trucks[x][y] = 0;
+            
+            y = ceil(dy);
+            x = ceil(dx);
+        }
+        //jezeli pozycja dx, dy jest zajeta omijamy ja albo gora albo dolem
+        else if(warH->arr_trucks[ceil(dx)][ceil(dy - 1)] == 0)
+        {
+            moved = true;
+
+            warH->arr_trucks[ceil(dx)][ceil(dy -1)] = nr;
+            warH->arr_trucks[x][y] = 0;
+            
+            y = ceil(dy -1 );
+            x = ceil(dx);
+        }
+        else if(warH->arr_trucks[ceil(dx)][ceil(dy + 1)] == 0)
+        {
+            moved = true;
+
+            warH->arr_trucks[ceil(dx)][ceil(dy +1)] = nr;
+            warH->arr_trucks[x][y] = 0;
+            
+            y = ceil(dy +1 );
+            x = ceil(dx);
+        }
+        
+        warH->mutexWarh.unlock();
+    }
 }
 
 void Truck::MoveToCrane(int _x, int _y)
@@ -120,7 +165,7 @@ void Truck::MoveToCrane(int _x, int _y)
                 dy = y +1;
              }
         }        
-        MoveToPoint(dx, dy);
+        MoveToPointV2(dx, dy);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
@@ -171,8 +216,8 @@ void Truck::Move()
 
 
                 
-            }
-        }
+    
+        
         else
         {
             
@@ -199,6 +244,7 @@ void Truck::Move()
         }
     }
 }
+
 
 void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarówka jest pas wyżej
 {
