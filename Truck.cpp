@@ -72,30 +72,36 @@ void Truck::Move()
         if(x == warH->roadX-3)//wyjazd z portu, ciężarówka czeka na pozwolenie wyjazdu
         {
             tLights->mRoad.lock();
-            EntryRoad();
+            if(dirC == 'E')
+            {
+                EntryRoad();
+            }
             tLights->mRoad.unlock();
         }
-
-        while(!moved)
+        else
         {
-            warH->mutexWarh.lock();
 
-            if(warH->arr_trucks[ceil(dx)][ceil(dy)] == 0)
+            while(!moved)
             {
-                moved = true;
+                warH->mutexWarh.lock();
 
-                warH->arr_trucks[ceil(dx)][ceil(dy)] = nr;
-                warH->arr_trucks[x][y] = 0;
-                
-                y = ceil(dy);
-                x = ceil(dx);
-            }
-            else
-            {
-                //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
+                if(warH->arr_trucks[ceil(dx)][ceil(dy)] == 0)
+                {
+                    moved = true;
 
-            warH->mutexWarh.unlock();
+                    warH->arr_trucks[ceil(dx)][ceil(dy)] = nr;
+                    warH->arr_trucks[x][y] = 0;
+                    
+                    y = ceil(dy);
+                    x = ceil(dx);
+                }
+                else
+                {
+                    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+
+                warH->mutexWarh.unlock();
+            }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(150 + (rand() % 100)));
     }
