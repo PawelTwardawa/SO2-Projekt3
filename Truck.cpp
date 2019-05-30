@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <stdlib.h>
+#include <unistd.h>
 
 Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL, Port * p)
 {
@@ -126,6 +127,7 @@ void Truck::MoveToCrane(int _x, int _y)
     //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 }
 
+
 void Truck::Move()
 {
     double dx;
@@ -157,13 +159,16 @@ void Truck::Move()
             direction *= -1;
             if(dirC == 'E')
             {
-                dirC = 'W';
                 EntryWarehouse();
+                dirC = 'W';
             }
             else
             {
-                 dirC = 'E';
-                 EntryHarbor();
+                EntryHarbor();
+                dirC = 'E';
+            }
+        }
+
 
                 
             }
@@ -197,7 +202,10 @@ void Truck::Move()
 
 void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarówka jest pas wyżej
 {
-    Unload();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(150*timeOperation + (rand() % 100)));
+
+
     warH->mutexWarh.lock();
     warH->arr_trucks[x][y] = 0;
     y = y + 2;
@@ -207,6 +215,7 @@ void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarów
 
 void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka jest pas niżej
 {
+
     bool find = false;
     Crane * crane;
     while(!find)

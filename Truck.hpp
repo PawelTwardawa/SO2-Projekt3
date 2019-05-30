@@ -19,7 +19,7 @@ public:
     int capacity;
     bool isFull;
     int status;                                 //procent postępu funkcji załadunku/rozładunku
-    std::atomic<int> x;                         //atomic bo były wyścigi
+    std::atomic<int> x;                         
     std::atomic<int> y;
     float speed;
     Warehouse* warH;
@@ -32,7 +32,6 @@ public:
 
     Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL, Port * p);
     void Load();
-    void Unload();
     void Move();
     void EntryWarehouse();
     void EntryHarbor();
