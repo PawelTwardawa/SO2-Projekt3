@@ -10,6 +10,7 @@
 #include "Sluice.hpp"
 #include "Truck.hpp"
 #include "Warehouse.hpp"
+#include "TrafficLights.hpp"
 
 //Program dostaje ilość statków, ilość żurawi i ilość ciężarówek
 
@@ -54,7 +55,7 @@ int main(int argc, char* argv[])
 
     Ocean *ocean = new Ocean('W', 1, 1);
     Warehouse *warehouse = new Warehouse('W', 10, 10, 30, 1); //magazyn 50x50, droga zaczyna się w x=10, kończy w x=10+30, na y=10, ilość pasów = 1
-
+    TrafficLights* trafficLights = new TrafficLights(1);
 
 
     for(int i = 0; i < numberShips; i++)
@@ -64,7 +65,7 @@ int main(int argc, char* argv[])
     }
     for(int i = 0; i < numberTrucks; i++)
     {
-        Truck *t = new Truck(i+1, 1, 1, i+1, 0, 1, warehouse, 'E', 10);
+        Truck *t = new Truck(i+1, 1, 1, i+1, 0, 1, warehouse, 'E', 10, trafficLights);
         trucks.push_back(t);
     }
 

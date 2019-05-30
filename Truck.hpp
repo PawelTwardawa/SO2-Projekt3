@@ -3,6 +3,7 @@
 //Może być zablokowana przez statek tylko jeśli jest pusta, może być rozładowana przez magazyn jeśli jest załadowana
 //Ciężarówki mają ograniczenie prędkości i nie mogą się ścigać
 #include "Warehouse.hpp"
+#include "TrafficLights.hpp"
 #include <thread>
 
 class Truck 
@@ -16,15 +17,17 @@ public:
     int y;
     float speed;
     Warehouse* warH;
+    TrafficLights* tLights;
     char dirC;                                  //kierunek jazdy ciężarówki
     std::thread threadT;
     int timeOperation;                          //czas operacji rozładunku/załadunku
 
 
-    Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO);
+    Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL);
     void Load();
     void Unload();
     void Move();
     void EntryWarehouse();
     void EntryHarbor();
+    void EntryRoad();
 };

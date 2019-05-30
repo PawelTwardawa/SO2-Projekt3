@@ -1,8 +1,9 @@
 #include "Truck.hpp"
+
 #include <cmath>
 #include <stdlib.h>
 
-Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO)
+Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL)
 {
     isFull = false;
     nr = N;
@@ -15,6 +16,7 @@ Truck::Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC,
     dirC = dC; 
     timeOperation = tO;
     threadT = std::thread(&Truck::Move, this);
+    tLights = tL;
 }
 
 void Truck::Load()
@@ -67,6 +69,12 @@ void Truck::Move()
         moved = false;
         dy = y;
 
+        if(x == warH->roadX-2)//wyjazd z portu, ciężarówka czeka na pozwolenie wyjazdu
+        {
+            //blokuję światła
+            EntryRoad();
+            //zwalniam światła
+        }
 
         while(!moved)
         {
@@ -98,7 +106,7 @@ void Truck::EntryWarehouse() //rozpoczyna rozładunek, po wyjeździe ciężarów
     Load();
     warH->mutexWarh.lock();
     warH->arr_trucks[x][y] = 0;
-    y = y + 1;
+    y = y + 2;
     warH->arr_trucks[x][y] = nr;
     warH->mutexWarh.unlock();
 }
@@ -108,7 +116,12 @@ void Truck::EntryHarbor() //rozpoczyna załadunek, po wyjeździe ciężarówka j
     Unload();
     warH->mutexWarh.lock();
     warH->arr_trucks[x][y] = 0;
-    y = y - 1;
+    y = y - 2;
     warH->arr_trucks[x][y] = nr;
-    warH->mutexWarh.unlock();
+    warH->mutexWarh.unlock(); 
+}
+
+void Truck::EntryRoad()
+{
+
 }

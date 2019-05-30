@@ -51,12 +51,12 @@ void Ui::Update()
                     else
                     {
                         //tutaj jakieś rysowanie drogi
-                        //if((i < ocean->sluiveO->x || i > ocean->sluiveO->x+ocean->sluiveO->len) || j == ocean->sluiveO->y)
-                            mvprintw(j, i + warehouse->arr_trucks[i].size(), ",");
-                        /*else
+                        if((j == warehouse->roadY-1 || j == warehouse->roadY+(warehouse->numRoads*2+1) || j == warehouse->roadY+(warehouse->numRoads)) && i >= warehouse->roadY && i <= warehouse->roadY+warehouse->roadLength)
+                            mvprintw(j, i + warehouse->arr_trucks[i].size(), "_");
+                        else
                         {
-                            mvprintw(j, i, " ");
-                        }*/
+                            mvprintw(j, i + warehouse->arr_trucks[i].size(), " ");
+                        }
                     }
                 }
         }
