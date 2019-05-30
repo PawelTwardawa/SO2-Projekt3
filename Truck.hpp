@@ -27,7 +27,6 @@ public:
 
     Truck(int N, int C, int X, int Y, int s, float sp, Warehouse* w, char dC, int tO, TrafficLights* tL);
     void Load();
-    void Unload();
     void Move();
     void EntryWarehouse();
     void EntryHarbor();
